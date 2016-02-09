@@ -1,11 +1,10 @@
 package sample.echoserver;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.concurrent.Semaphore;
+import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -27,8 +26,6 @@ public class EchoServer {
 
 	public static void main(String[] args) throws Exception {
 		setLogDirectory();
-		System.out.println(EchoServer.class.getClassLoader().getResource("logging.properties"));
-
 		pm = PlatformLocator.factory.createPlatformManager();
 		startRestServer();
 		addShutdownHook();
@@ -40,23 +37,18 @@ public class EchoServer {
 		String logDir = System.getenv("CAF_APP_LOG_DIR");
 		log.info("CAF_APP_LOG_DIR -> {} ", logDir);
 
-		String logConfigFileLoc = System.getProperty("java.util.logging.config.file");
-		log.info("java.util.logging.config.file -> {} ", logConfigFileLoc);
-		if (logConfigFileLoc != null) {
-			File logPropertiesFile = new File(logConfigFileLoc);
-
-			// Read logging.properties file
-			String loggingConfiguration;
-			try {
-				loggingConfiguration = FileUtils.readFileToString(logPropertiesFile);
-				// replace variable ${logsDir} with actual log directory location
-				loggingConfiguration = loggingConfiguration.replace("${logsDir}", logDir.replace('\\', '/'));
-
-				// Read Properties file again
-				LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(loggingConfiguration.getBytes()));
-			} catch (Exception e) {
-				log.error("Error while setting log directory", e);
-			}
+		String fileLimit = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.limit");
+		String count = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.count");
+		
+		java.util.logging.Logger logger = java.util.logging.Logger.getLogger("");
+		String fileName = logDir + File.separatorChar + "application-log.%u.%g.txt";
+		
+		FileHandler fileHandler;
+		try {
+			fileHandler = new FileHandler(fileName, Integer.parseInt(fileLimit), Integer.parseInt(count), true);
+			logger.addHandler(fileHandler);
+		} catch (Exception e) {
+			log.error("Error while setting log directory", e);
 		}
 	}
 
