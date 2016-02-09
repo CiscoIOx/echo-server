@@ -1,0 +1,28 @@
+descriptor-schema-version: "2.0"
+ 
+info:
+  name: Echo Server App
+  description: "IOx Java PaaS style App for Http Echo Server functionality"
+  version: "1.0"
+  author-link: "http://www.cisco.com"
+  author-name: "Cisco Systems"
+
+app:
+  # Indicate app type (vm, paas, lxc etc.,)
+  type: paas
+          
+  resources:
+      profile: c1.small
+      network:
+        -
+          interface-name: eth0
+          ports:
+            tcp:
+            - 8080
+    
+  startup: 
+    runtime: java
+    runtime-version: 1.8
+    runtime-options: 
+      classpath: "$CAF_APP_PATH/*:$CAF_APP_PATH/lib/*:$CAF_APP_PATH/lib/third-party/*"
+    target: sample.echoserver
