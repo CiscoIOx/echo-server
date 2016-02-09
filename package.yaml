@@ -21,8 +21,9 @@ app:
             - 8080
     
   startup: 
-    runtime: java
+    runtime: java-se-embedded-cp3
     runtime-version: 1.8
     runtime-options: 
       classpath: "$CAF_APP_PATH/*:$CAF_APP_PATH/lib/*:$CAF_APP_PATH/lib/third-party/*"
-    target: sample.echoserver
+      java-options: -Djava.util.logging.config.file=logging.properties -Djava.net.preferIPv4Stack=true
+    target: sample.echoserver.EchoServer
