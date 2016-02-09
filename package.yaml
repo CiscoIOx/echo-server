@@ -2,7 +2,7 @@ descriptor-schema-version: "2.0"
  
 info:
   name: Echo Server App
-  description: "IOx Java PaaS style App for Http Echo Server functionality"
+  description: "IOx Java PaaS style Application for Http Echo Server functionality"
   version: "1.0"
   author-link: "http://www.cisco.com"
   author-name: "Cisco Systems"
@@ -12,7 +12,7 @@ app:
   type: paas
           
   resources:
-      profile: c1.small
+      profile: c1.medium
       network:
         -
           interface-name: eth0
