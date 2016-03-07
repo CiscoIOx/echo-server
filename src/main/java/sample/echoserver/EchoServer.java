@@ -34,8 +34,15 @@ public class EchoServer {
 
 	private static void setLogDirectory() {
 		// Read log directory location
+		
+		String currentDirectory = System.getProperty("user.dir");
 		String logDir = System.getenv("CAF_APP_LOG_DIR");
-		log.info("CAF_APP_LOG_DIR -> {} ", logDir);
+		
+		if(logDir == null) {
+			logDir = currentDirectory;
+		}
+		
+		log.info("Log Directory Location -> {} ", logDir);
 
 		String fileLimit = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.limit");
 		String count = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.count");
